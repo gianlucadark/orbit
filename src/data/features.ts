@@ -1,0 +1,63 @@
+// Audited against ORBIT 0.8.0 registry.rs, each provider and the UI. See docs/FEATURE_AUDIT.md.
+export interface Feature { id: string; name: string; category: string; description: string; formats: string; options: string; example: string; source: string; condition?: string }
+const f = (id: string, name: string, category: string, description: string, formats: string, options: string, example: string, source: string, condition?: string): Feature => ({id,name,category,description,formats,options,example,source,condition});
+export const features: Feature[] = [
+  ...['png','jpg','webp','bmp','tiff'].map(ext => f(`image:${ext}`, `Converti in ${ext.toUpperCase()}`, 'Immagini', 'Cambia formato e ridimensiona mantenendo le proporzioni.', 'PNG, JPG, WebP, BMP, TIFF, GIF, SVG, HEIC, HEIF, AVIF', 'Larghezza / altezza. Qualità JPG e WebP; WebP 100 senza perdita. GIF e TIFF: primo frame/pagina.', `foto.png → foto.${ext}`, 'converters/images.rs', 'HEIC/HEIF/AVIF richiedono i codec Windows.')),
+  f('image:compress','Comprimi a una dimensione','Immagini','Scegli il peso, ORBIT cerca la qualità che ci sta.','Immagini → JPEG o WebP trasparente','200 KB–10 MB o valore personalizzato; può ridurre la risoluzione.','foto.png → entro 1 MB','converters/images.rs'),
+  f('image:ico','Crea icone Windows','Immagini','Un file con più dimensioni per le tue icone.','Immagini → ICO','Da 16 a 256 px, centrato su trasparenza.','logo.png → logo.ico','converters/images.rs'),
+  f('vector:svg','Vettorizza SVG','Immagini','Dai pixel ai tracciati: loghi, disegni o fotografie in stile poster.','Immagini raster → SVG','Logo (fino a 16 colori), Bianco e nero, Foto. Le linee grigie sottili possono perdersi nel preset Logo.','logo.png → logo.svg','converters/vector.rs'),
+  f('bg:remove','Rimuovi sfondo','Immagini','Lascia il soggetto al centro. Elaborazione sul tuo PC.','Immagini → PNG trasparente / JPG bianco','U²-Netp incluso. ISNet opzionale: download di 178,6 MB.','tazza.png → tazza senza sfondo.png','converters/background.rs','Windows ML; qualità variabile sul soggetto.'),
+  f('pdf:images','Immagini in un PDF','PDF','Raccogli le immagini in un documento, nell’ordine scelto.','Immagini e SVG → PDF','Trasparenza su fondo bianco.','3 immagini → un documento.pdf','pdf/mod.rs'),
+  f('pdf:merge','Unisci PDF','PDF','Più documenti, una sola destinazione.','2 o più PDF → PDF','Ordine della selezione. Moduli interattivi e PDF cifrati esclusi.','parte 1 + parte 2 → unito.pdf','pdf/mod.rs'),
+  ...[
+    ['split','Dividi pagine','Ogni pagina diventa un file.','Un PDF → più PDF','Tutte le pagine.','documento.pdf → pagina 1.pdf + pagina 2.pdf'],
+    ['extract','Estrai pagine','Conserva solo le pagine che servono.','PDF → PDF','Intervalli, per esempio 1–3, 5.','documento.pdf → estratto.pdf'],
+    ['rotate','Ruota pagine','Rimetti le pagine nel verso giusto.','PDF → PDF','90°, 180°, 270° e intervallo pagine.','scansione.pdf → ruotato.pdf'],
+    ['text','Estrai testo','Porta il testo selezionabile in un file semplice.','PDF → TXT','Per scansioni usa Copia testo (OCR).','documento.pdf → documento.txt'],
+    ['png','Pagine in PNG','Trasforma le pagine in immagini.','PDF → PNG','Intervallo pagine; lato lungo massimo 2000 px.','documento.pdf → pagina.png'],
+    ['jpg','Pagine in JPG','Crea immagini delle pagine da condividere.','PDF → JPG','Intervallo pagine e qualità. Lato lungo massimo 2000 px.','documento.pdf → pagina.jpg'],
+    ['compress','Comprimi PDF','Alleggerisci le fotografie incorporate conservando testo e vettori.','PDF → PDF','JPEG qualità 70, lato lungo ≤ 2000 px. Solo immagini compatibili; riduzione non garantita.','documento.pdf → compresso.pdf'],
+  ].map(([id,name,desc,formats,options,example]) => f(`pdf:${id}`,name,'PDF',desc,formats,options,example,'pdf/mod.rs','PDF cifrati non supportati.')),
+  f('ocr:copy','Copia testo (OCR)','Testo e QR','Una scansione o uno screenshot diventano parole da usare.','Immagini, singolo PDF → appunti','Elaborazione locale; legge anche PDF con testo selezionabile.','scansione → testo negli appunti','ocr.rs','Richiede una lingua OCR installata in Windows.'),
+  f('ocr:pdf','PDF ricercabile','Testo e QR','Cerca e seleziona le parole dentro una scansione.','Immagini, singolo PDF → PDF','Aggiunge uno strato di testo invisibile mantenendo l’aspetto.','scansione.pdf → PDF ricercabile','ocr.rs','Richiede una lingua OCR installata in Windows.'),
+  f('qr:read','Leggi QR code','Testo e QR','Recupera il contenuto di un QR da un’immagine.','Immagini → appunti','Testo dei codici riconosciuti.','QR.png → contenuto negli appunti','converters/qr.rs'),
+  ...['png','svg'].map(ext => f(`qr:${ext}`,`Genera QR ${ext.toUpperCase()}`,'Testo e QR','Trasforma un testo o un collegamento in un codice.','TXT, URL → '+ext.toUpperCase(),'Payload fino a 2331 byte; correzione M.',`link.txt → QR.${ext}`,'converters/qr.rs')),
+  f('office:pdf','Documenti in PDF','Documenti','Porta documenti, fogli e presentazioni in PDF.','DOCX, DOC, ODT, RTF, TXT, XLSX, PPTX → PDF','Layout dipendente da LibreOffice.','relazione.docx → relazione.pdf','converters/office.rs','Richiede LibreOffice installato.'),
+  f('office:txt','DOCX in testo','Documenti','Recupera il testo del documento in UTF-8.','DOCX → TXT','Conversione locale via LibreOffice.','appunti.docx → appunti.txt','converters/office.rs','Richiede LibreOffice installato.'),
+  ...[
+    ['mp4','Comprimi video','Un video della dimensione giusta per condividerlo.','Video → MP4 H.264/AAC','10 / 16 / 25 / 50 / 100 / 500 MB o personalizzato.','video.mov → video compresso.mp4'],
+    ['gif','Crea GIF animate','Un piccolo momento, in loop.','Video → GIF','Primi 3–15 secondi, 10 fps, 320–640 px.','video.mp4 → animazione.gif'],
+    ['mp3','Estrai o converti audio','Tieni solo ciò che si ascolta.','Video o audio → MP3','192 kbps.','video.mp4 → audio.mp3'],
+  ].map(([id,name,desc,formats,options,example]) => f(`media:${id}`,name,'Audio e video',desc,formats,options,example,'converters/media.rs','Codec Windows necessari; WebM/OGG/Opus possono richiedere estensioni. Filmati lunghi e 4K non validati.')),
+  ...[
+    ['json','JSON','YAML, TOML, CSV, TSV, XLSX, XLS, ODS'],
+    ['yaml','YAML','JSON, TOML, CSV, TSV'],
+    ['toml','TOML','JSON, YAML'],
+    ['csv','CSV','JSON, YAML, XLSX, XLS, ODS'],
+    ['xlsx','Excel XLSX','JSON, YAML, CSV, TSV'],
+    ['html','HTML','Markdown'],
+  ].map(([id,name,inputs]) => f(`data:${id}`,`Converti in ${name}`,'Dati',id === 'html' ? 'Dal Markdown a una pagina leggibile anche offline.' : 'Cambia formato senza riscrivere i tuoi dati.',`${inputs} → ${id.toUpperCase()}`,id === 'html' ? 'Tabelle, task list e note.' : 'Limite 64 MiB. Per CSV/XLSX da JSON/YAML serve un elenco di oggetti. Un CSV per foglio.',`${inputs.split(',')[0].toLowerCase()} → ${id}`,'converters/data.rs')),
+  f('privacy:strip','Rimuovi metadati','Privacy','Condividi il contenuto, senza autore, GPS e altre informazioni accessorie.','JPEG, PNG, WebP, PDF, DOCX, XLSX, PPTX','Nessuna ricompressione salvo JPEG con orientamento EXIF, ruotati e ricodificati.','foto.jpg → foto pulita.jpg','converters/privacy.rs'),
+  f('archive:extract','Estrai archivio','Archivi','Riporta i file fuori dall’archivio.','ZIP, 7Z, TAR, TAR.GZ → file','Limiti predefiniti: 10.000 elementi e 1 GiB; niente link simbolici.','progetto.zip → file','archives/mod.rs'),
+  f('archive:list','Elenca contenuto','Archivi','Un indice di ciò che contiene l’archivio.','ZIP, 7Z, TAR, TAR.GZ → TXT','Indice locale senza estrarre i contenuti finali.','progetto.zip → indice.txt','archives/mod.rs'),
+  ...['zip','7z','tar','tar.gz'].flatMap(ext => [
+    f(`archive:create:${ext}`,`Crea ${ext.toUpperCase()}`,'Archivi','Raccogli file e cartelle in un solo archivio.',`File e cartelle → ${ext.toUpperCase()}`,'Limiti di elementi e dimensione configurabili; 7Z non solid.',`file + cartella → archivio.${ext}`,'archives/mod.rs'),
+    f(`archive:repack:${ext}`,`Archivio in ${ext.toUpperCase()}`,'Archivi','Cambia il contenitore, conserva i file.',`ZIP, 7Z, TAR, TAR.GZ → ${ext.toUpperCase()}`,'Estrazione intermedia controllata; archivi annidati non espansi.',`archivio → archivio.${ext}`,'archives/mod.rs'),
+  ]),
+  f('share:phone','Al telefono','Condivisione','Inquadra il QR e scarica i file dal browser del telefono.','Da 1 a 50 file; niente cartelle','Stessa rete locale, PC acceso, link di 10 minuti, arresto manuale.','PC → QR → browser sul telefono','share.rs','Firewall e isolamento Wi-Fi possono impedire il collegamento. Test HTTP presenti; telefono fisico da validare.'),
+  f('ui:selection','Seleziona e apri la ruota','Windows','Le operazioni arrivano dove stai lavorando.','File selezionati su Desktop / Esplora file','Ctrl+Alt+O configurabile; drag & drop nella finestra ORBIT.','selezione → scorciatoia → ruota','windows/shell.rs','Multi-monitor, DPI e schede Explorer richiedono verifica manuale.'),
+  f('ui:capture','Cattura schermo','Windows','Cattura una porzione di schermo e passa alla ruota con OCR pronto.','Strumento di cattura Windows → immagine','Ctrl+Alt+S configurabile; anche da tray e palette.','schermo → cattura → Copia testo','windows/mod.rs','Flusso implementato; cattura interattiva da verificare manualmente.'),
+  f('ui:paste','Incolla in ORBIT','Windows','File, immagini, percorsi e testo diventano il punto di partenza.','Appunti Windows → file / immagine / testo','Ctrl+V; JSON riconosciuto come .json, altro testo come .txt.','Ctrl+V → operazioni compatibili','windows/shell.rs'),
+  f('ui:context','Apri con ORBIT','Windows','Un ingresso direttamente dal menu contestuale.','File e cartelle','Opt-in in Preferenze; menu classico, Altre opzioni su Windows 11.','clic destro → Apri con ORBIT','windows/shell.rs','Selezioni multiple da verificare nella shell reale.'),
+  f('ui:palette','Palette comandi','Windows','Trova un’operazione digitando il suo nome.','Operazioni compatibili e comandi app','Ctrl+K; navigazione tastiera.','Ctrl+K → cerca → esegui','../src/components/CommandPalette.tsx'),
+  f('ui:jobs','Batch, coda e cronologia','Windows','Più file, operazioni compatibili, progressi e risultati in un posto.','Selezioni compatibili; fino a 256 elementi','Worker sequenziale, annullamento e ultimi 100 lavori.','selezione multipla → coda → risultati','jobs/mod.rs'),
+  f('ui:save','Salva come vuoi','Windows','Scegli la destinazione o abilita il salvataggio rapido.','File o cartelle di output','Shift+Enter inverte la preferenza; nomi liberi per evitare collisioni.','operazione → Salva come / cartella','jobs/mod.rs'),
+  f('ui:settings','Il tuo ambiente','Windows','Pergamena o Inchiostro, italiano o inglese.','Preferenze locali','Tema, lingua, scorciatoie e salvataggio; sincronizzazione delle finestre.','Preferenze → ambiente personale','../src/features/settings/Settings.tsx'),
+];
+export const categories = ['Immagini','PDF','Testo e QR','Condivisione','Dati','Archivi','Audio e video','Documenti','Privacy','Windows'];
+export const demoSets = [
+  { name:'Tazza.png', kind:'Immagine', ext:'PNG', image:'/assets/tazza.webp', ids:['image:png','image:jpg','image:webp','image:bmp','image:tiff','image:ico','vector:svg','pdf:images','image:compress','ocr:copy','ocr:pdf','qr:read','bg:remove','privacy:strip','share:phone','archive:create:zip','archive:create:7z','archive:create:tar','archive:create:tar.gz'] },
+  { name:'Idee.pdf',kind:'Documento',ext:'PDF',ids:['pdf:split','pdf:extract','pdf:rotate','pdf:text','pdf:png','pdf:jpg','pdf:compress','ocr:pdf','ocr:copy','privacy:strip','share:phone','archive:create:zip','archive:create:7z','archive:create:tar','archive:create:tar.gz'] },
+  { name:'Dati.json',kind:'Dati',ext:'JSON',ids:['data:yaml','data:toml','data:csv','data:xlsx','share:phone','archive:create:zip','archive:create:7z','archive:create:tar','archive:create:tar.gz'] },
+  { name:'Due PDF',kind:'Selezione multipla',ext:'2 PDF',ids:['pdf:merge','privacy:strip','share:phone','archive:create:zip','archive:create:7z','archive:create:tar','archive:create:tar.gz'] },
+];

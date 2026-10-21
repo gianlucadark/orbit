@@ -1,0 +1,43 @@
+---
+import '../styles/site.css';
+import Mark from './Mark.astro';
+import Download from './Download.astro';
+const { title = 'ORBIT — Seleziona un file. Premi Ctrl+Alt+O.', description = 'Il menu radiale per i file di Windows: converti, comprimi, togli lo sfondo, copia il testo da una foto e manda file al telefono. Gratis, tutto sul tuo PC.' } = Astro.props;
+const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site) : null;
+const image = Astro.site ? new URL('/assets/social.png', Astro.site) : '/assets/social.png';
+---
+<!doctype html><html lang="it"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><meta name="theme-color" content="#15100b"/><meta name="color-scheme" content="dark light"/><title>{title}</title><meta name="description" content={description}/><link rel="icon" type="image/svg+xml" href="/favicon.svg"/>{canonical && <link rel="canonical" href={canonical}/>}
+<meta property="og:type" content="website"/><meta property="og:locale" content="it_IT"/><meta property="og:site_name" content="ORBIT"/><meta property="og:title" content={title}/><meta property="og:description" content={description}/><meta property="og:image" content={image}/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/>{canonical && <meta property="og:url" content={canonical}/>}
+<meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content={title}/><meta name="twitter:description" content={description}/><meta name="twitter:image" content={image}/>
+</head><body>
+<a class="skip-link" href="#main">Vai al contenuto</a>
+<header class="site-header">
+  <a class="brand" href="/" aria-label="ORBIT, pagina iniziale"><Mark size={26} class="brand-mark"/><span>ORBIT</span></a>
+  <nav aria-label="Principale"><a href="/#sfondo">Come funziona</a><a href="/#funzioni">Funzioni</a><a href="/#domande">Domande</a></nav>
+  <Download compact/>
+</header>
+<slot/>
+<footer class="site-footer">
+  <a class="brand" href="/"><Mark size={22}/><span>ORBIT</span></a>
+  <nav aria-label="Pagine"><a href="/download/">Download e requisiti</a><a href="/funzionalita/">Tutte le funzioni</a><a href="/#domande">Domande</a></nav>
+  <p>Un menu radiale per i file di Windows. Tutto sul tuo PC.</p>
+</footer>
+<div id="download-notice" class="download-notice" role="status" aria-live="polite" hidden></div>
+<script>
+  document.querySelectorAll<HTMLAnchorElement>('a[data-download="ready"]').forEach(a => a.addEventListener('click', () => {
+    const n = document.querySelector<HTMLElement>('#download-notice');
+    if (!n) return;
+    n.hidden = false;
+    n.innerHTML = '<b>Download avviato.</b> Apri il file dalla barra dei download. Se compare «PC protetto», scegli Ulteriori informazioni → Esegui comunque.';
+    setTimeout(() => n.hidden = true, 9000);
+  }));
+  // The planet of the logo travels its orbit as the page scrolls.
+  const header = document.querySelector<HTMLElement>('.site-header');
+  const turn = () => {
+    const max = document.documentElement.scrollHeight - innerHeight;
+    document.documentElement.style.setProperty('--turn', `${(max > 0 ? scrollY / max : 0) * 360}deg`);
+    header?.classList.toggle('is-scrolled', scrollY > 8);
+  };
+  addEventListener('scroll', turn, { passive: true }); turn();
+</script>
+</body></html>

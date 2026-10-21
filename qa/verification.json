@@ -1,0 +1,31 @@
+{
+  "at": "2026-10-21T16:05:42.978Z",
+  "base": "http://127.0.0.1:4321",
+  "viewports": [
+    {
+      "width": 1920,
+      "indexRows": 54,
+      "axe": []
+    },
+    {
+      "width": 1366,
+      "indexRows": 54,
+      "axe": [],
+      "download": "/downloads/ORBIT_0.8.0_x64-setup.exe",
+      "downloadVerified": true
+    },
+    {
+      "width": 390,
+      "indexRows": 54,
+      "axe": []
+    },
+    {
+      "width": 375,
+      "indexRows": 54,
+      "axe": []
+    }
+  ],
+  "errors": [],
+  "failedRequests": [],
+  "ok": true
+}

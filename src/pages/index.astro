@@ -1,0 +1,138 @@
+---
+import Layout from '../components/Layout.astro';
+import Mark from '../components/Mark.astro';
+import Download from '../components/Download.astro';
+import PixelMark from '../components/PixelMark.astro';
+import Hero from '../components/Hero';
+import Index from '../components/Index';
+import { download } from '../lib/download';
+import { features } from '../data/features';
+const operations = features.filter(f => f.category !== 'Windows').length;
+const faqs: [string, string][] = [
+ ['Come si apre la ruota?', 'Seleziona uno o più file in Esplora file o sul desktop e premi Ctrl + Alt + O. Funziona anche trascinando i file sulla finestra di ORBIT, incollandoli con Ctrl + V o scegliendo «Apri con ORBIT» dal menu del tasto destro. La scorciatoia si cambia nelle Preferenze.'],
+ ['I miei file vanno su internet?', 'No. Conversioni, OCR e rimozione dello sfondo girano sul tuo PC. La connessione serve solo se scegli di scaricare il modello di ritaglio ad alta qualità (178,6 MB, una volta sola). «Al telefono» passa il file sulla tua rete Wi-Fi, senza cloud.'],
+ ['Quanto costa?', 'Niente. ORBIT si scarica e si usa gratis, senza account, senza abbonamenti e senza pubblicità.'],
+ ['Windows dice «PC protetto». È normale?', 'Sì. L’installer non ha ancora una firma digitale, quindi SmartScreen non lo conosce e mostra un avviso al primo avvio. Fai clic su «Ulteriori informazioni» e poi su «Esegui comunque». Se vuoi controllare il file, nella pagina di download trovi la sua impronta SHA-256.'],
+ ['Su quali PC funziona?', 'Windows 10 e 11 a 64 bit. L’installer pesa 9,8 MB e installa ORBIT solo per il tuo utente, in meno di un minuto.'],
+ ['Come arriva un file sul telefono?', 'PC e telefono devono stare sulla stessa rete Wi-Fi. Scegli «Al telefono», inquadra il QR e scarica dal browser: nessuna app da installare. Il collegamento dura 10 minuti, o finché premi Ferma. La prima volta Windows può chiederti di consentire ORBIT nel firewall.'],
+ ['Sovrascrive i miei file?', 'Mai. Il risultato è sempre un file nuovo: lo salvi dove vuoi, oppure attivi il salvataggio rapido accanto all’originale.'],
+ ['Servono altri programmi?', 'Quasi mai. Per trasformare documenti Office in PDF serve LibreOffice. L’OCR usa le lingue già installate in Windows; HEIC, AVIF e alcuni formati video dipendono dai codec del PC.'],
+];
+---
+<Layout><main id="main">
+
+<section class="hero ink" aria-labelledby="hero-title">
+  <Hero client:load>
+    <div class="hero-cta"><Download/><a class="film-link" href="#film"><span class="film-link-play" aria-hidden="true"></span>Guarda il film · 24 s</a></div>
+  </Hero>
+</section>
+
+<section class="scene sweep-scene paper" id="sfondo" aria-labelledby="sweep-title">
+  <div class="scene-copy">
+    <h2 id="sweep-title">Lo sfondo<br/>se ne va.</h2>
+    <p>Un clic su <b>Sfondo</b> e resta solo il soggetto, su trasparenza o su bianco. Il modello è dentro ORBIT e lavora offline: la foto non lascia il tuo PC.</p>
+    <p class="aside">Per capelli e bordi difficili c’è un modello più preciso, che ORBIT scarica una volta sola, se lo chiedi.</p>
+  </div>
+  <figure class="sweep" style="--a:120">
+    <div class="sweep-art">
+      <img class="sweep-under" src="/assets/tazza-cutout.webp" width="800" height="800" loading="lazy" alt="La stessa tazza dopo ORBIT: lo sfondo è stato rimosso"/>
+      <img class="sweep-over" src="/assets/tazza.webp" width="800" height="800" loading="lazy" alt="Foto originale di una tazza rossa su un tavolo"/>
+      <span class="sweep-hand" aria-hidden="true"><i></i></span>
+    </div>
+    <figcaption>Tazza.png <span>→</span> Tazza senza sfondo.png <small>risultato reale del motore di ORBIT</small></figcaption>
+    <input class="sweep-range" type="range" min="0" max="360" value="120" aria-label="Ruota la lancetta per confrontare prima e dopo"/>
+  </figure>
+</section>
+
+<section class="scene phone-scene ink" id="telefono" aria-labelledby="phone-title">
+  <div class="scene-copy">
+    <h2 id="phone-title">Dal PC<br/>al telefono.<br/><span>Senza cavi.</span></h2>
+    <p>Scegli <b>Al telefono</b>: ORBIT mostra un QR. Lo inquadri e il file si scarica dal browser del telefono. Nessuna app, nessun account, nessun cloud: passa tutto sulla tua rete Wi-Fi.</p>
+    <p class="aside">Il collegamento scade dopo 10 minuti. PC e telefono devono stare sulla stessa rete.</p>
+  </div>
+  <div class="phone-stage" aria-hidden="true">
+    <svg class="phone-path" viewBox="0 0 600 520" preserveAspectRatio="none"><path id="flight" d="M190 250 C 260 60, 430 40, 470 210"/></svg>
+    <div class="share-card">
+      <p class="share-head"><Mark size={16}/> Al telefono</p>
+      <img src="/assets/qr-demo.svg" width="150" height="150" alt=""/>
+      <p class="share-hint">Inquadra con la fotocamera del telefono, sulla stessa rete Wi-Fi.</p>
+      <p class="share-foot"><span>1 file · scade tra 9:59</span><span>Ferma</span></p>
+    </div>
+    <div class="handset">
+      <div class="handset-screen">
+        <p class="handset-brand"><Mark size={14}/> ORBIT</p>
+        <p class="handset-title">1 file</p>
+        <p class="handset-sub">Il link scade tra pochi minuti</p>
+        <span class="handset-slot"><img src="/assets/tazza-cutout.webp" width="400" height="400" alt="" loading="lazy"/></span>
+        <p class="handset-file">Tazza senza sfondo.png <span>897 KB</span></p>
+        <span class="handset-button">Scarica</span>
+      </div>
+    </div>
+    <img class="flying-file" src="/assets/tazza-cutout.webp" width="400" height="400" alt="" loading="lazy"/>
+  </div>
+</section>
+
+<section class="scene ocr-scene paper" id="testo" aria-labelledby="ocr-title">
+  <div class="ocr-stage">
+    <div class="scan-sheet"><img src="/assets/scan-demo.png" width="1200" height="720" loading="lazy" alt="Una pagina di appunti con scritto: Le idee migliori meritano spazio."/><span class="scan-beam" aria-hidden="true"></span></div>
+    <div class="clip" aria-hidden="true">
+      <p class="clip-label">Appunti</p>
+      <p class="clip-text" data-text="Le idee migliori meritano spazio."><span class="typed"></span><i class="caret"></i></p>
+      <p class="clip-done">Copiato. Ctrl + V dove vuoi.</p>
+    </div>
+  </div>
+  <div class="scene-copy">
+    <h2 id="ocr-title">Il testo<br/>di una foto,<br/>copiato.</h2>
+    <p>Screenshot, scansioni, foto di una lavagna: <b>Testo</b> legge le parole e le mette negli appunti. Oppure crea un PDF in cui cercare e selezionare. Legge anche i QR code.</p>
+    <p class="aside">Con <kbd>Ctrl</kbd> <kbd>Alt</kbd> <kbd>S</kbd> catturi un pezzo di schermo e la ruota si apre già lì. L’OCR usa le lingue installate in Windows.</p>
+  </div>
+</section>
+
+<section class="scene vector-scene ink" id="svg" aria-labelledby="vector-title">
+  <div class="scene-copy">
+    <p class="new-tag">Nuovo nella 0.8</p>
+    <h2 id="vector-title">Dai pixel<br/>ai tracciati.</h2>
+    <p><b>Vettorizza</b> trasforma un’immagine in SVG: un logo sgranato torna nitido a qualsiasi dimensione. Tre stili: Logo, Bianco e nero, Foto.</p>
+  </div>
+  <figure class="vector-figure"><PixelMark/><figcaption><span>logo.png · 22 × 22 px</span><span>logo.svg · infinito</span></figcaption></figure>
+</section>
+
+<section class="scene index-scene paper" id="funzioni" aria-labelledby="index-title">
+  <div class="index-head">
+    <h2 id="index-title"><span class="big-number">{operations}</span> cose da fare<br/>con un file.</h2>
+    <p>Le famiglie della ruota cambiano con quello che selezioni: un PDF non ha le stesse mosse di una foto o di un foglio di calcolo. Ecco tutte le operazioni, con formati e limiti.</p>
+  </div>
+  <Index client:visible/>
+  <noscript><p class="noscript"><a href="/funzionalita/">Leggi l’elenco completo delle funzioni</a></p></noscript>
+</section>
+
+<section class="scene film-scene ink" id="film" aria-labelledby="film-title">
+  <div class="film-head"><h2 id="film-title">ORBIT in 24 secondi.</h2><p>Con l’audio, meglio.</p></div>
+  <div class="film-frame">
+    <video controls playsinline preload="none" poster="/assets/film-poster-wide.webp" width="1920" height="1080" aria-label="Film di presentazione di ORBIT, 24 secondi"><source src="/assets/orbit-film-wide.mp4" type="video/mp4"/><p><a href="/assets/orbit-film-wide.mp4">Guarda il film di ORBIT</a></p></video>
+    <button type="button" class="film-play" hidden><span aria-hidden="true"></span>Guarda il film · 24 s</button>
+  </div>
+</section>
+
+<section class="scene faq-scene paper" id="domande" aria-labelledby="faq-title">
+  <h2 id="faq-title">Domande<br/>frequenti.</h2>
+  <div class="faq-list">{faqs.map(([q, a]) => <details><summary>{q}<span aria-hidden="true"></span></summary><p>{a}</p></details>)}</div>
+</section>
+
+<section class="finale ink" id="download" aria-labelledby="finale-title">
+  <div class="finale-wheel" aria-hidden="true">
+    <svg viewBox="0 0 400 400">
+      {['CONVERTI','COMPRIMI','TESTO','MODIFICA','TELEFONO'].map((name, i) => { const s = Math.PI * 2 / 5; const a = -Math.PI / 2 - s / 2 + i * s; const p = (r: number, t: number) => `${(200 + Math.cos(t) * r).toFixed(2)} ${(200 + Math.sin(t) * r).toFixed(2)}`; const g = .03; return <g><path d={`M${p(190, a + g)}A190 190 0 0 1 ${p(190, a + s - g)}L${p(96, a + s - g * 1.9)}A96 96 0 0 0 ${p(96, a + g * 1.9)}Z`}/><text x={(200 + Math.cos(a + s / 2) * 143).toFixed(2)} y={(200 + Math.sin(a + s / 2) * 143).toFixed(2)}>{name}</text></g>; })}
+    </svg>
+  </div>
+  <div class="finale-copy">
+    <h2 id="finale-title">Fai un giro.</h2>
+    <p>Scarica ORBIT, seleziona un file, premi <kbd>Ctrl</kbd> <kbd>Alt</kbd> <kbd>O</kbd>.<br/>Il resto lo scopri girando.</p>
+    <Download/>
+    <p class="finale-note">Al primo avvio Windows potrebbe dire «PC protetto»: l’installer non è ancora firmato. Clic su <b>Ulteriori informazioni</b>, poi <b>Esegui comunque</b>. <a href="/download/">Requisiti e impronta SHA-256</a></p>
+  </div>
+</section>
+
+</main><script type="application/ld+json" set:html={JSON.stringify({'@context':'https://schema.org','@type':'SoftwareApplication',name:'ORBIT',operatingSystem:'Windows 10, Windows 11',applicationCategory:'UtilitiesApplication',softwareVersion:download.version,fileSize:`${download.bytes}`,offers:{'@type':'Offer',price:'0',priceCurrency:'EUR'},description:'Un menu radiale per Windows: seleziona un file, premi Ctrl+Alt+O e convertilo, comprimilo, togli lo sfondo, leggi il testo o mandalo al telefono. Tutto in locale.',...(download.url && download.url.startsWith('https://') ? {downloadUrl:download.url}:{}),featureList:features.map(f=>f.name)})}/>
+<script>import '../lib/motion';</script>
+</Layout>

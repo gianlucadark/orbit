@@ -1,0 +1,11 @@
+---
+import Layout from '../components/Layout.astro';
+import { features, categories } from '../data/features';
+---
+<Layout title="Tutte le funzioni di ORBIT — formati, opzioni e requisiti" description="L’elenco completo delle operazioni di ORBIT per Windows: immagini, PDF, OCR, QR code, dati, archivi, audio e video, con formati supportati e limiti."><main id="main" class="document-page">
+<h1>Tutte le <em>funzioni.</em></h1>
+<p class="lede">Ogni operazione della ruota, con i formati che accetta, le opzioni e quello che serve per usarla.</p>
+<nav class="catalog-nav" aria-label="Categorie">{categories.map((c, i) => <a href={`#categoria-${i}`}>{c}</a>)}</nav>
+{categories.map((c, i) => <section id={`categoria-${i}`}><h2>{c}</h2>{features.filter(f => f.category === c).map(f => <article class="catalog-item" id={f.id.replaceAll(':', '-')}><h3>{f.name}</h3><p>{f.description}</p><p><strong>Formati:</strong> {f.formats}<br/><strong>Opzioni e limiti:</strong> {f.options}</p>{f.condition && <p><strong>Serve:</strong> {f.condition}</p>}<p><code>{f.example}</code></p></article>)}</section>)}
+<p><a href="/download/">Scarica ORBIT</a></p>
+</main></Layout>

@@ -1,0 +1,10 @@
+import { readFile, mkdir, copyFile } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
+const release = JSON.parse(await readFile(new URL('../src/data/release.json', import.meta.url)));
+const source = new URL(`../../release/${release.file}`, import.meta.url);
+const bytes = await readFile(source);
+if (bytes.length !== release.bytes || createHash('sha256').update(bytes).digest('hex') !== release.sha256) throw new Error('Installer diverso da quello verificato. Aggiornare prima audit e release.json.');
+if (bytes.toString('ascii', 0, 2) !== 'MZ' || bytes.toString('ascii', bytes.readUInt32LE(0x3c), bytes.readUInt32LE(0x3c) + 4) !== 'PE\0\0') throw new Error('Header PE non valido');
+await mkdir(new URL('../public/downloads/', import.meta.url), { recursive: true });
+await copyFile(source, new URL(`../public/downloads/${release.file}`, import.meta.url));
+console.log(`Installer PE verificato, ${bytes.length} byte, SHA-256 ${release.sha256}. Copia locale ignorata da Git.`);

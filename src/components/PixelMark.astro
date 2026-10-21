@@ -1,0 +1,47 @@
+---
+// The ORBIT mark twice: rasterised on a coarse grid, and as the vector it really is,
+// with its anchor points and handles. A scanner line converts one into the other.
+const N = 22;           // grid cells across the 32-unit mark
+const cell = 32 / N;
+const inside = (x: number, y: number) => {
+  const d = Math.hypot(x - 16, y - 16);
+  if (d <= 5.5) return true;
+  if (Math.hypot(x - 25.2, y - 6.8) <= 2) return true;
+  if (Math.abs(d - 13) <= 0.8) {
+    // Dash of 58 on a circumference of 81.68, starting at -50°.
+    const a = ((Math.atan2(y - 16, x - 16) * 180 / Math.PI + 50) % 360 + 360) % 360;
+    return a <= 58 / (2 * Math.PI * 13) * 360;
+  }
+  return false;
+};
+const pixels: { x: number; y: number; o: number }[] = [];
+for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {
+  let hit = 0;
+  for (let sy = 0; sy < 4; sy++) for (let sx = 0; sx < 4; sx++) if (inside((i + (sx + .5) / 4) * cell, (j + (sy + .5) / 4) * cell)) hit++;
+  const o = Math.round(hit / 16 * 3) / 3;
+  if (o > 0) pixels.push({ x: +(i * cell).toFixed(3), y: +(j * cell).toFixed(3), o: +o.toFixed(2) });
+}
+// Anchors: four per circle, two at the ends of the arc, with their tangent handles.
+const k = 0.5523;
+const circleAnchors = (cx: number, cy: number, r: number) => [[cx + r, cy, 0, r * k], [cx, cy + r, r * k, 0], [cx - r, cy, 0, r * k], [cx, cy - r, r * k, 0]];
+const arcEnd = (deg: number) => { const a = deg * Math.PI / 180; return [16 + Math.cos(a) * 13, 16 + Math.sin(a) * 13, -Math.sin(a) * 4, Math.cos(a) * 4]; };
+const anchors = [...circleAnchors(16, 16, 5.5), ...circleAnchors(25.2, 6.8, 2).slice(0, 2), arcEnd(-50), arcEnd(-50 + 58 / (2 * Math.PI * 13) * 360), arcEnd(80)];
+const h = cell * .9;
+---
+<div class="pixel-mark" aria-hidden="true">
+  <svg class="pm-raster" viewBox="0 0 32 32">
+    <path class="pm-grid" d={Array.from({ length: N + 1 }, (_, i) => `M${(i * cell).toFixed(3)} 0V32M0 ${(i * cell).toFixed(3)}H32`).join('')}/>
+    {pixels.map(p => <rect x={p.x + .05} y={p.y + .05} width={h} height={h} opacity={p.o}/>)}
+  </svg>
+  <svg class="pm-vector" viewBox="0 0 32 32">
+    <g class="pm-shape">
+      <circle cx="16" cy="16" r="5.5"/>
+      <circle cx="16" cy="16" r="13" class="pm-ring" stroke-dasharray="58 24" transform="rotate(-50 16 16)"/>
+      <circle cx="25.2" cy="6.8" r="2"/>
+    </g>
+    <g class="pm-handles">
+      {anchors.map(([x, y, dx, dy]) => <><path d={`M${(x - dx).toFixed(3)} ${(y - dy).toFixed(3)}L${(x + dx).toFixed(3)} ${(y + dy).toFixed(3)}`}/><circle cx={(x - dx).toFixed(3)} cy={(y - dy).toFixed(3)} r=".32"/><circle cx={(x + dx).toFixed(3)} cy={(y + dy).toFixed(3)} r=".32"/><rect x={(x - .42).toFixed(3)} y={(y - .42).toFixed(3)} width=".84" height=".84"/></>)}
+    </g>
+  </svg>
+  <div class="pm-scan"><span>SVG</span></div>
+</div>

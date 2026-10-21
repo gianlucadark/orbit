@@ -1,0 +1,8 @@
+---
+import { download } from '../lib/download';
+const { compact = false } = Astro.props;
+---
+<a class:list={['download-button', { compact }]} href={download.url || '/download/'} download={download.local ? download.file : undefined} data-download={download.available ? 'ready' : 'details'}>
+  <svg class="win" width="18" height="18" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path d="M1 3.3 8.5 2.2v7H1zm8.8-1.4L19 .6v8.6h-9.2zM1 10.7h7.5v7L1 16.6zm8.8 0H19v8.7l-9.2-1.3z"/></svg>
+  {compact ? <span>Scarica</span> : <span class="download-label">Scarica per Windows<small>Gratis · v{download.version} · {download.size}</small></span>}
+</a>

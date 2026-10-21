@@ -1,0 +1,44 @@
+---
+import Layout from '../components/Layout.astro';
+import Download from '../components/Download.astro';
+import { download } from '../lib/download';
+---
+<Layout title={`Scarica ORBIT ${download.version} per Windows`} description="Scarica ORBIT per Windows 10 e 11 (x64): installer gratuito da 9,8 MB. Requisiti, impronta SHA-256 e come superare l’avviso SmartScreen."><main id="main" class="document-page">
+<h1>Scarica <em>ORBIT.</em></h1>
+<p class="lede">Versione {download.version} per Windows 10 e 11 a 64 bit. Gratis, senza account. L’installer pesa {download.size} e installa ORBIT solo per il tuo utente.</p>
+<div class="download-state">{download.available ? <Download/> : <p><strong>Il download pubblico arriva a breve.</strong> Questa pagina mostrerà il collegamento appena l’installer sarà online.</p>}</div>
+
+<dl class="metadata">
+  <div><dt>Versione</dt><dd>{download.version} · 21 ottobre 2026</dd></div>
+  <div><dt>Sistema</dt><dd>Windows 10 e 11 · x64</dd></div>
+  <div><dt>Dimensione</dt><dd>{download.bytes.toLocaleString('it-IT')} byte</dd></div>
+  <div><dt>File</dt><dd><code>{download.file}</code></dd></div>
+</dl>
+<p class="hash"><span>Impronta SHA-256</span><code>{download.sha256}</code></p>
+<p>Per controllarla, in PowerShell: <code>Get-FileHash .\{download.file}</code>. Deve coincidere con quella qui sopra.</p>
+
+<h2>Installazione</h2>
+<ol>
+  <li>Apri <code>{download.file}</code> dalla cartella Download.</li>
+  <li>Se Windows mostra «PC protetto», fai clic su <b>Ulteriori informazioni</b> e poi su <b>Esegui comunque</b>. L’installer non ha ancora una firma digitale, quindi SmartScreen non lo riconosce: è un avviso previsto.</li>
+  <li>Segui l’installazione, poi seleziona un file in Esplora file e premi <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>O</kbd>.</li>
+</ol>
+<div class="smartscreen" aria-hidden="true">
+  <figure><div class="ss-box"><strong>PC protetto da Windows</strong><span>Microsoft Defender SmartScreen ha impedito l’avvio di un’app non riconosciuta…</span><u>Ulteriori informazioni</u><div class="ss-actions"><span>Non eseguire</span></div></div><figcaption>1 · Clic su «Ulteriori informazioni»</figcaption></figure>
+  <figure><div class="ss-box"><strong>PC protetto da Windows</strong><span>App: {download.file}<br/>Autore: Autore sconosciuto</span><div class="ss-actions"><span class="on">Esegui comunque</span><span>Non eseguire</span></div></div><figcaption>2 · Clic su «Esegui comunque»</figcaption></figure>
+</div>
+
+<h2>Cosa serve</h2>
+<ul>
+  <li>Un PC con Windows 10 o 11 a 64 bit. L’interfaccia usa WebView2, già presente su Windows 11 e sui Windows 10 aggiornati.</li>
+  <li>Per trasformare documenti Office in PDF: LibreOffice installato.</li>
+  <li>Per l’OCR: la lingua del testo installata in Windows (Impostazioni → Ora e lingua).</li>
+  <li>Per HEIC, AVIF e alcuni formati video: i codec corrispondenti di Microsoft Store.</li>
+  <li>Il modello di ritaglio ad alta qualità è facoltativo: 178,6 MB, scaricati solo se lo chiedi.</li>
+</ul>
+
+<h2>Novità della {download.version}</h2>
+<p>Vettorizzazione: le immagini diventano SVG, con tre stili (Logo, Bianco e nero, Foto). Il risultato mantiene le dimensioni originali. Per i disegni a linee sottili, il preset Bianco e nero rende meglio di Logo.</p>
+<details><summary>Versioni precedenti</summary><ul><li>0.7.0 — ruota a famiglie concentriche.</li><li>0.6.0 — cattura schermo e invio al telefono.</li><li>0.5.0 — compressione video, GIF e MP3.</li><li>0.4.0 — rimozione dello sfondo sul PC.</li><li>0.3.0 — OCR, dati, QR code, metadati e interfaccia in inglese.</li><li>0.2.0 — temi Pergamena e Inchiostro, salvataggio rapido.</li></ul></details>
+<p><a href="/funzionalita/">Tutte le funzioni, con formati e limiti</a></p>
+</main></Layout>

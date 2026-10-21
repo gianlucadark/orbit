@@ -1,6 +1,6 @@
 {
-  "at": "2026-10-21T16:05:42.978Z",
-  "base": "http://127.0.0.1:4321",
+  "at": "2026-10-21T20:35:39.482Z",
+  "base": "https://orbit-beta-app.vercel.app",
   "viewports": [
     {
       "width": 1920,
@@ -11,8 +11,7 @@
       "width": 1366,
       "indexRows": 54,
       "axe": [],
-      "download": "/downloads/ORBIT_0.8.0_x64-setup.exe",
-      "downloadVerified": true
+      "download": "https://github.com/gianlucadark/orbit/releases/download/v0.8.0/ORBIT_0.8.0_x64-setup.exe"
     },
     {
       "width": 390,

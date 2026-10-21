@@ -78,8 +78,8 @@ Non sono vendute come funzioni disponibili. Nessuna recensione, premio, benchmar
 ## Distribuzione verificata
 
 - `package.json`, Cargo.toml e tauri.conf.json concordano su **0.8.0**.
-- `release/ORBIT_0.8.0_x64-setup.exe`: **10.241.862 byte**, NSIS x64, utente corrente.
-- SHA-256: `e6fb71c87e58fd35527b3ddf0cd05f2df353301272858b9d4645e55b1080e980`.
+- `release/ORBIT_0.8.0_x64-setup.exe`: **10.244.343 byte**, NSIS x64, utente corrente.
+- SHA-256: `f030381ad1dd16f9648302500b7bf10e59da19ef67c5e24018905762b12198e3`.
 - Header MZ/PE verificati; hash coincidente con output `src-tauri/target/release/bundle/nsis`.
 - Authenticode: **NotSigned**. Log build Tauri: EXIT 0, 21 ottobre 2026.
 - Download effettivo dal browser locale confrontato con dimensione e hash; non solo click.

@@ -78,8 +78,8 @@ Non sono vendute come funzioni disponibili. Nessuna recensione, premio, benchmar
 ## Distribuzione verificata
 
 - `package.json`, Cargo.toml e tauri.conf.json concordano su **0.8.0**.
-- `release/ORBIT_0.8.0_x64-setup.exe`: **10.241.862 byte**, NSIS x64, utente corrente.
-- SHA-256: `e6fb71c87e58fd35527b3ddf0cd05f2df353301272858b9d4645e55b1080e980`.
+- `release/ORBIT_0.8.0_x64-setup.exe`: **10.244.343 byte**, NSIS x64, utente corrente.
+- SHA-256: `f030381ad1dd16f9648302500b7bf10e59da19ef67c5e24018905762b12198e3`.
 - Header MZ/PE verificati; hash coincidente con output `src-tauri/target/release/bundle/nsis`.
 - Authenticode: **NotSigned**. Log build Tauri: EXIT 0, 21 ottobre 2026.
 - Download effettivo dal browser locale confrontato con dimensione e hash; non solo click.
@@ -110,15 +110,15 @@ alla radice ORBIT. Per ogni voce, eventuali condizioni o verifiche pendenti sono
 
 | ID / funzione | Modulo | Stato ed evidenza | Landing |
 |---|---|---|---|
-| `image:png` — Converti in PNG | `src-tauri/src/converters/images.rs` | Implementata nel codice. HEIC/HEIF/AVIF richiedono i codec Windows. | Catalogo interattivo + accessibile. Larghezza / altezza. Qualità JPG e WebP; WebP 100 senza perdita. GIF e TIFF: primo frame/pagina. |
-| `image:jpg` — Converti in JPG | `src-tauri/src/converters/images.rs` | Implementata nel codice. HEIC/HEIF/AVIF richiedono i codec Windows. | Catalogo interattivo + accessibile. Larghezza / altezza. Qualità JPG e WebP; WebP 100 senza perdita. GIF e TIFF: primo frame/pagina. |
-| `image:webp` — Converti in WEBP | `src-tauri/src/converters/images.rs` | Implementata nel codice. HEIC/HEIF/AVIF richiedono i codec Windows. | Catalogo interattivo + accessibile. Larghezza / altezza. Qualità JPG e WebP; WebP 100 senza perdita. GIF e TIFF: primo frame/pagina. |
-| `image:bmp` — Converti in BMP | `src-tauri/src/converters/images.rs` | Implementata nel codice. HEIC/HEIF/AVIF richiedono i codec Windows. | Catalogo interattivo + accessibile. Larghezza / altezza. Qualità JPG e WebP; WebP 100 senza perdita. GIF e TIFF: primo frame/pagina. |
-| `image:tiff` — Converti in TIFF | `src-tauri/src/converters/images.rs` | Implementata nel codice. HEIC/HEIF/AVIF richiedono i codec Windows. | Catalogo interattivo + accessibile. Larghezza / altezza. Qualità JPG e WebP; WebP 100 senza perdita. GIF e TIFF: primo frame/pagina. |
+| `image:png` — Converti in PNG | `src-tauri/src/converters/images.rs` | Implementata nel codice. HEIC/HEIF/AVIF richiedono le estensioni HEIF e HEVC (o AV1) del Microsoft Store. | Catalogo interattivo + accessibile. Larghezza / altezza. Qualità JPG e WebP; WebP 100 senza perdita. GIF e TIFF: primo frame/pagina. |
+| `image:jpg` — Converti in JPG | `src-tauri/src/converters/images.rs` | Implementata nel codice. HEIC/HEIF/AVIF richiedono le estensioni HEIF e HEVC (o AV1) del Microsoft Store. | Catalogo interattivo + accessibile. Larghezza / altezza. Qualità JPG e WebP; WebP 100 senza perdita. GIF e TIFF: primo frame/pagina. |
+| `image:webp` — Converti in WEBP | `src-tauri/src/converters/images.rs` | Implementata nel codice. HEIC/HEIF/AVIF richiedono le estensioni HEIF e HEVC (o AV1) del Microsoft Store. | Catalogo interattivo + accessibile. Larghezza / altezza. Qualità JPG e WebP; WebP 100 senza perdita. GIF e TIFF: primo frame/pagina. |
+| `image:bmp` — Converti in BMP | `src-tauri/src/converters/images.rs` | Implementata nel codice. HEIC/HEIF/AVIF richiedono le estensioni HEIF e HEVC (o AV1) del Microsoft Store. | Catalogo interattivo + accessibile. Larghezza / altezza. Qualità JPG e WebP; WebP 100 senza perdita. GIF e TIFF: primo frame/pagina. |
+| `image:tiff` — Converti in TIFF | `src-tauri/src/converters/images.rs` | Implementata nel codice. HEIC/HEIF/AVIF richiedono le estensioni HEIF e HEVC (o AV1) del Microsoft Store. | Catalogo interattivo + accessibile. Larghezza / altezza. Qualità JPG e WebP; WebP 100 senza perdita. GIF e TIFF: primo frame/pagina. |
 | `image:compress` — Comprimi a una dimensione | `src-tauri/src/converters/images.rs` | Implementata nel codice. Nessuna dipendenza esterna aggiuntiva dichiarata dal registro. | Catalogo interattivo + accessibile. 200 KB–10 MB o valore personalizzato; può ridurre la risoluzione. |
 | `image:ico` — Crea icone Windows | `src-tauri/src/converters/images.rs` | Implementata nel codice. Nessuna dipendenza esterna aggiuntiva dichiarata dal registro. | Catalogo interattivo + accessibile. Da 16 a 256 px, centrato su trasparenza. |
 | `vector:svg` — Vettorizza SVG | `src-tauri/src/converters/vector.rs` | Implementata nel codice. Nessuna dipendenza esterna aggiuntiva dichiarata dal registro. | Catalogo interattivo + accessibile. Logo (fino a 16 colori), Bianco e nero, Foto. Le linee grigie sottili possono perdersi nel preset Logo. |
-| `bg:remove` — Rimuovi sfondo | `src-tauri/src/converters/background.rs` | Implementata nel codice. Windows ML; qualità variabile sul soggetto. | Catalogo interattivo + accessibile. U²-Netp incluso. ISNet opzionale: download di 178,6 MB. |
+| `bg:remove` — Rimuovi sfondo | `src-tauri/src/converters/background.rs` | Implementata nel codice. Windows ML (Windows 10 1809 o successivo); qualità variabile sul soggetto. | Catalogo interattivo + accessibile. U²-Netp incluso. ISNet opzionale: download di 178,6 MB. |
 
 ## PDF
 
@@ -180,9 +180,9 @@ alla radice ORBIT. Per ogni voce, eventuali condizioni o verifiche pendenti sono
 
 | ID / funzione | Modulo | Stato ed evidenza | Landing |
 |---|---|---|---|
-| `media:mp4` — Comprimi video | `src-tauri/src/converters/media.rs` | Implementata nel codice. Codec Windows necessari; WebM/OGG/Opus possono richiedere estensioni. Filmati lunghi e 4K non validati. | Catalogo interattivo + accessibile. 10 / 16 / 25 / 50 / 100 / 500 MB o personalizzato. |
-| `media:gif` — Crea GIF animate | `src-tauri/src/converters/media.rs` | Implementata nel codice. Codec Windows necessari; WebM/OGG/Opus possono richiedere estensioni. Filmati lunghi e 4K non validati. | Catalogo interattivo + accessibile. Primi 3–15 secondi, 10 fps, 320–640 px. |
-| `media:mp3` — Estrai o converti audio | `src-tauri/src/converters/media.rs` | Implementata nel codice. Codec Windows necessari; WebM/OGG/Opus possono richiedere estensioni. Filmati lunghi e 4K non validati. | Catalogo interattivo + accessibile. 192 kbps. |
+| `media:mp4` — Comprimi video | `src-tauri/src/converters/media.rs` | Implementata nel codice. Codec Windows necessari: sulle edizioni N serve il Media Feature Pack. WebM/OGG/Opus possono richiedere estensioni. Filmati lunghi e 4K non validati. | Catalogo interattivo + accessibile. 10 / 16 / 25 / 50 / 100 / 500 MB o personalizzato. |
+| `media:gif` — Crea GIF animate | `src-tauri/src/converters/media.rs` | Implementata nel codice. Codec Windows necessari: sulle edizioni N serve il Media Feature Pack. WebM/OGG/Opus possono richiedere estensioni. Filmati lunghi e 4K non validati. | Catalogo interattivo + accessibile. Primi 3–15 secondi, 10 fps, 320–640 px. |
+| `media:mp3` — Estrai o converti audio | `src-tauri/src/converters/media.rs` | Implementata nel codice. Codec Windows necessari: sulle edizioni N serve il Media Feature Pack. WebM/OGG/Opus possono richiedere estensioni. Filmati lunghi e 4K non validati. | Catalogo interattivo + accessibile. 192 kbps. |
 
 ## Documenti
 

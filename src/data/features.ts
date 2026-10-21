@@ -2,11 +2,11 @@
 export interface Feature { id: string; name: string; category: string; description: string; formats: string; options: string; example: string; source: string; condition?: string }
 const f = (id: string, name: string, category: string, description: string, formats: string, options: string, example: string, source: string, condition?: string): Feature => ({id,name,category,description,formats,options,example,source,condition});
 export const features: Feature[] = [
-  ...['png','jpg','webp','bmp','tiff'].map(ext => f(`image:${ext}`, `Converti in ${ext.toUpperCase()}`, 'Immagini', 'Cambia formato e ridimensiona mantenendo le proporzioni.', 'PNG, JPG, WebP, BMP, TIFF, GIF, SVG, HEIC, HEIF, AVIF', 'Larghezza / altezza. Qualità JPG e WebP; WebP 100 senza perdita. GIF e TIFF: primo frame/pagina.', `foto.png → foto.${ext}`, 'converters/images.rs', 'HEIC/HEIF/AVIF richiedono i codec Windows.')),
+  ...['png','jpg','webp','bmp','tiff'].map(ext => f(`image:${ext}`, `Converti in ${ext.toUpperCase()}`, 'Immagini', 'Cambia formato e ridimensiona mantenendo le proporzioni.', 'PNG, JPG, WebP, BMP, TIFF, GIF, SVG, HEIC, HEIF, AVIF', 'Larghezza / altezza. Qualità JPG e WebP; WebP 100 senza perdita. GIF e TIFF: primo frame/pagina.', `foto.png → foto.${ext}`, 'converters/images.rs', 'HEIC/HEIF/AVIF richiedono le estensioni HEIF e HEVC (o AV1) del Microsoft Store.')),
   f('image:compress','Comprimi a una dimensione','Immagini','Scegli il peso, ORBIT cerca la qualità che ci sta.','Immagini → JPEG o WebP trasparente','200 KB–10 MB o valore personalizzato; può ridurre la risoluzione.','foto.png → entro 1 MB','converters/images.rs'),
   f('image:ico','Crea icone Windows','Immagini','Un file con più dimensioni per le tue icone.','Immagini → ICO','Da 16 a 256 px, centrato su trasparenza.','logo.png → logo.ico','converters/images.rs'),
   f('vector:svg','Vettorizza SVG','Immagini','Dai pixel ai tracciati: loghi, disegni o fotografie in stile poster.','Immagini raster → SVG','Logo (fino a 16 colori), Bianco e nero, Foto. Le linee grigie sottili possono perdersi nel preset Logo.','logo.png → logo.svg','converters/vector.rs'),
-  f('bg:remove','Rimuovi sfondo','Immagini','Lascia il soggetto al centro. Elaborazione sul tuo PC.','Immagini → PNG trasparente / JPG bianco','U²-Netp incluso. ISNet opzionale: download di 178,6 MB.','tazza.png → tazza senza sfondo.png','converters/background.rs','Windows ML; qualità variabile sul soggetto.'),
+  f('bg:remove','Rimuovi sfondo','Immagini','Lascia il soggetto al centro. Elaborazione sul tuo PC.','Immagini → PNG trasparente / JPG bianco','U²-Netp incluso. ISNet opzionale: download di 178,6 MB.','tazza.png → tazza senza sfondo.png','converters/background.rs','Windows ML (Windows 10 1809 o successivo); qualità variabile sul soggetto.'),
   f('pdf:images','Immagini in un PDF','PDF','Raccogli le immagini in un documento, nell’ordine scelto.','Immagini e SVG → PDF','Trasparenza su fondo bianco.','3 immagini → un documento.pdf','pdf/mod.rs'),
   f('pdf:merge','Unisci PDF','PDF','Più documenti, una sola destinazione.','2 o più PDF → PDF','Ordine della selezione. Moduli interattivi e PDF cifrati esclusi.','parte 1 + parte 2 → unito.pdf','pdf/mod.rs'),
   ...[
@@ -28,7 +28,7 @@ export const features: Feature[] = [
     ['mp4','Comprimi video','Un video della dimensione giusta per condividerlo.','Video → MP4 H.264/AAC','10 / 16 / 25 / 50 / 100 / 500 MB o personalizzato.','video.mov → video compresso.mp4'],
     ['gif','Crea GIF animate','Un piccolo momento, in loop.','Video → GIF','Primi 3–15 secondi, 10 fps, 320–640 px.','video.mp4 → animazione.gif'],
     ['mp3','Estrai o converti audio','Tieni solo ciò che si ascolta.','Video o audio → MP3','192 kbps.','video.mp4 → audio.mp3'],
-  ].map(([id,name,desc,formats,options,example]) => f(`media:${id}`,name,'Audio e video',desc,formats,options,example,'converters/media.rs','Codec Windows necessari; WebM/OGG/Opus possono richiedere estensioni. Filmati lunghi e 4K non validati.')),
+  ].map(([id,name,desc,formats,options,example]) => f(`media:${id}`,name,'Audio e video',desc,formats,options,example,'converters/media.rs','Codec Windows necessari: sulle edizioni N serve il Media Feature Pack. WebM/OGG/Opus possono richiedere estensioni. Filmati lunghi e 4K non validati.')),
   ...[
     ['json','JSON','YAML, TOML, CSV, TSV, XLSX, XLS, ODS'],
     ['yaml','YAML','JSON, TOML, CSV, TSV'],

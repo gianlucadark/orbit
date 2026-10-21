@@ -30,15 +30,23 @@ import { download } from '../lib/download';
 
 <h2>Cosa serve</h2>
 <ul>
-  <li>Un PC con Windows 10 o 11 a 64 bit. L’interfaccia usa WebView2, già presente su Windows 11 e sui Windows 10 aggiornati.</li>
-  <li>Per trasformare documenti Office in PDF: LibreOffice installato.</li>
-  <li>Per l’OCR: la lingua del testo installata in Windows (Impostazioni → Ora e lingua).</li>
-  <li>Per HEIC, AVIF e alcuni formati video: i codec corrispondenti di Microsoft Store.</li>
+  <li>Un PC con Windows 10 o 11 a 64 bit. Su Windows 7, 8 e sulle versioni a 32 bit l’installer si ferma con un avviso.</li>
+  <li>L’interfaccia usa WebView2, già presente su Windows 11 e sui Windows 10 aggiornati. Se manca, l’installer lo scarica da Microsoft; la versione portable lo segnala all’avvio e propone il download.</li>
+  <li>Windows in modalità S non permette di installare app fuori dal Microsoft Store.</li>
+  <li>Sui PC con processore ARM (Snapdragon) ORBIT gira su Windows 11 in emulazione: funziona, ma è più lento.</li>
+</ul>
+<p>Alcune funzioni usano componenti di Windows che non tutti i PC hanno. Se ne manca uno, ORBIT disattiva l’operazione, spiega cosa serve e apre la pagina giusta per installarlo:</p>
+<ul>
+  <li>Documenti Office in PDF: LibreOffice installato.</li>
+  <li>OCR: la lingua del testo installata in Windows (Impostazioni → Ora e lingua).</li>
+  <li>Foto HEIC: «Estensioni immagine HEIF» ed «Estensioni video HEVC» dal Microsoft Store. AVIF: «Estensione video AV1».</li>
+  <li>Video e audio sulle edizioni N di Windows (Europa e Corea): il «Media Feature Pack», da Impostazioni → App → Funzionalità facoltative.</li>
+  <li>Rimozione dello sfondo: Windows 10 versione 1809 o successiva.</li>
   <li>Il modello di ritaglio ad alta qualità è facoltativo: 178,6 MB, scaricati solo se lo chiedi.</li>
 </ul>
 
 <h2>Novità della {download.version}</h2>
-<p>Vettorizzazione: le immagini diventano SVG, con tre stili (Logo, Bianco e nero, Foto). Il risultato mantiene le dimensioni originali. Per i disegni a linee sottili, il preset Bianco e nero rende meglio di Logo.</p>
-<details><summary>Versioni precedenti</summary><ul><li>0.7.0 — ruota a famiglie concentriche.</li><li>0.6.0 — cattura schermo e invio al telefono.</li><li>0.5.0 — compressione video, GIF e MP3.</li><li>0.4.0 — rimozione dello sfondo sul PC.</li><li>0.3.0 — OCR, dati, QR code, metadati e interfaccia in inglese.</li><li>0.2.0 — temi Pergamena e Inchiostro, salvataggio rapido.</li></ul></details>
+<p>Compatibilità: se al PC manca un componente di Windows (codec HEIC/AVIF, Media Feature Pack, lingua OCR, LibreOffice), l’operazione resta visibile ma disattivata, con la spiegazione e un pulsante che apre la pagina per installarlo. La versione portable avvisa se manca WebView2 e l’installer si ferma su sistemi non supportati.</p>
+<details><summary>Versioni precedenti</summary><ul><li>0.8.0 — vettorizzazione in SVG.</li><li>0.7.0 — ruota a famiglie concentriche.</li><li>0.6.0 — cattura schermo e invio al telefono.</li><li>0.5.0 — compressione video, GIF e MP3.</li><li>0.4.0 — rimozione dello sfondo sul PC.</li><li>0.3.0 — OCR, dati, QR code, metadati e interfaccia in inglese.</li><li>0.2.0 — temi Pergamena e Inchiostro, salvataggio rapido.</li></ul></details>
 <p><a href="/funzionalita/">Tutte le funzioni, con formati e limiti</a></p>
 </main></Layout>

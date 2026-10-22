@@ -1,10 +1,10 @@
 {
   "version": "0.9.0",
   "file": "ORBIT_0.9.0_x64-setup.exe",
-  "bytes": 10240593,
-  "sha256": "787436e8d4b72227417ea947e1a30450a4fdd161e9af5770306e8af94fb6be8f",
+  "bytes": 10271047,
+  "sha256": "1111575904d3140bf2b29600c7eae95b83e825c318bff7669db80a59cc8a6c07",
   "architecture": "x64",
   "signature": "NotSigned",
-  "builtAt": "2026-10-21",
+  "builtAt": "2026-10-22",
   "publicUrl": "https://github.com/gianlucadark/orbit/releases/download/v0.9.0/ORBIT_0.9.0_x64-setup.exe"
 }

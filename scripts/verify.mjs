@@ -5,6 +5,7 @@ import AxeBuilder from '@axe-core/playwright';
 import { mkdir, writeFile, readFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import assert from 'node:assert/strict';
+import { features } from '../src/data/features.ts';
 const base = process.env.TEST_URL || 'http://127.0.0.1:4321';
 const release = JSON.parse(await readFile(new URL('../src/data/release.json', import.meta.url)));
 const browser = await chromium.launch({ channel: 'chrome', headless: true });
@@ -46,6 +47,37 @@ try {
       await page.getByRole('group', { name: 'Ruota di ORBIT per Idee.pdf' }).waitFor({ state: 'detached' });
     });
 
+    await step('PDF editor demonstration', async () => {
+      await page.locator('#pdf').scrollIntoViewIfNeeded();
+      await page.locator('astro-island[component-url*="PdfDemo"]:not([ssr])').waitFor({ state: 'attached' });
+      const demo = page.locator('.pdf-demo');
+      if (!touch) {
+        const heading = await page.locator('.pdf-heading').boundingBox();
+        const sheet = await page.locator('.pdf-sheet').boundingBox();
+        assert.ok(heading.width > width * .7, 'PDF heading spans the section');
+        assert.ok(sheet.width > 350, 'PDF document remains readable on desktop');
+      }
+      await demo.getByRole('button', { name: 'Correggi la data' }).click();
+      assert.equal(await demo.locator('.pdf-corrected').innerText(), '24 ottobre 2026');
+      await demo.getByRole('button', { name: /02 Firma/ }).click();
+      await demo.getByRole('button', { name: 'Aggiungi la firma' }).click();
+      await demo.getByRole('img', { name: 'Firma dimostrativa' }).waitFor();
+      await demo.getByRole('button', { name: /03 Oscura/ }).click();
+      await demo.getByRole('button', { name: 'Oscura i dati di esempio' }).click();
+      assert.equal(await demo.locator('.pdf-blackout').count(), 2);
+      assert.equal(await demo.getByText('studio@example.com', { exact: true }).count(), 0);
+      await page.locator('#pdf').screenshot({ path: `qa/pdf-${width}.png` });
+      await demo.getByRole('button', { name: 'Confronta con l’originale' }).click();
+      await demo.getByText('studio@example.com', { exact: true }).waitFor();
+      await demo.getByText('24 ottobre 2025', { exact: true }).waitFor();
+      await demo.getByRole('button', { name: 'Confronta con l’originale' }).click();
+      assert.equal(await demo.locator('.pdf-blackout').count(), 2);
+      await demo.getByRole('button', { name: 'Ricomincia la demo PDF' }).click();
+      assert.equal(await demo.locator('.pdf-blackout').count(), 0);
+      await demo.getByRole('button', { name: 'Correggi la data' }).waitFor();
+      result.pdfDemo = true;
+    });
+
     await step('index', async () => {
       await page.locator('#funzioni').scrollIntoViewIfNeeded();
       await page.locator('astro-island[component-url*="Index"]:not([ssr])').waitFor({ state: 'attached' });
@@ -54,7 +86,7 @@ try {
       await page.getByText('Niente con').waitFor({ state: 'detached' });
       await page.getByRole('button', { name: /^Tutte/ }).click();
       result.indexRows = await page.locator('.index-list > li').count();
-      assert.equal(result.indexRows, 54);
+      assert.equal(result.indexRows, features.length);
     });
 
     await step('faq', async () => {

@@ -2,7 +2,7 @@
 import '../styles/site.css';
 import Mark from './Mark.astro';
 import Download from './Download.astro';
-const { title = 'ORBIT — Seleziona un file. Premi Ctrl+Alt+O.', description = 'Il menu radiale per i file di Windows: converti, comprimi, togli lo sfondo, copia il testo da una foto e manda file al telefono. Gratis, tutto sul tuo PC.' } = Astro.props;
+const { title = 'ORBIT — Seleziona un file. Premi Ctrl+Alt+O.', description = 'Modifica PDF, firma e oscura dati sensibili. Converti file, togli lo sfondo e invia al telefono. ORBIT per Windows: gratis, tutto sul tuo PC.' } = Astro.props;
 const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site) : null;
 const image = Astro.site ? new URL('/assets/social.png', Astro.site) : '/assets/social.png';
 ---
@@ -13,7 +13,7 @@ const image = Astro.site ? new URL('/assets/social.png', Astro.site) : '/assets/
 <a class="skip-link" href="#main">Vai al contenuto</a>
 <header class="site-header">
   <a class="brand" href="/" aria-label="ORBIT, pagina iniziale"><Mark size={26} class="brand-mark"/><span>ORBIT</span></a>
-  <nav aria-label="Principale"><a href="/#sfondo">Come funziona</a><a href="/#funzioni">Funzioni</a><a href="/#domande">Domande</a></nav>
+  <nav aria-label="Principale"><a href="/#pdf">Modifica PDF</a><a href="/#funzioni">Funzioni</a><a href="/#domande">Domande</a></nav>
   <Download compact/>
 </header>
 <slot/>

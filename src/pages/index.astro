@@ -5,6 +5,7 @@ import Download from '../components/Download.astro';
 import PixelMark from '../components/PixelMark.astro';
 import Hero from '../components/Hero';
 import Index from '../components/Index';
+import PdfDemo from '../components/PdfDemo';
 import { download } from '../lib/download';
 import { features } from '../data/features';
 const operations = features.filter(f => f.category !== 'Windows').length;
@@ -13,10 +14,12 @@ const faqs: [string, string][] = [
  ['I miei file vanno su internet?', 'No. Conversioni, OCR e rimozione dello sfondo girano sul tuo PC. La connessione serve solo se scegli di scaricare il modello di ritaglio ad alta qualità (178,6 MB, una volta sola). «Al telefono» passa il file sulla tua rete Wi-Fi, senza cloud.'],
  ['Quanto costa?', 'Niente. ORBIT si scarica e si usa gratis, senza account, senza abbonamenti e senza pubblicità.'],
  ['Windows dice «PC protetto». È normale?', 'Sì. L’installer non ha ancora una firma digitale, quindi SmartScreen non lo conosce e mostra un avviso al primo avvio. Fai clic su «Ulteriori informazioni» e poi su «Esegui comunque». Se vuoi controllare il file, nella pagina di download trovi la sua impronta SHA-256.'],
- ['Su quali PC funziona?', 'Windows 10 e 11 a 64 bit. L’installer pesa 9,8 MB e installa ORBIT solo per il tuo utente, in meno di un minuto.'],
+ ['Su quali PC funziona?', `Windows 10 e 11 a 64 bit. L’installer pesa ${download.size} e installa ORBIT solo per il tuo utente.`],
+ ['I dati oscurati si possono recuperare?', 'Nel PDF salvato, ORBIT rimuove il contenuto delle aree oscurate, compresi testo e porzioni di immagini. L’originale resta intatto: condividi la nuova copia. Lo scanner cerca i dati nel testo leggibile del PDF; controlla i risultati e usa l’oscuramento manuale sulle scansioni o sui dati non rilevati.'],
+ ['Posso cambiare il testo di un PDF?', 'Sì. Fai clic sul testo per correggerlo, oppure usa Trova e sostituisci. ORBIT usa il font del documento quando contiene i caratteri necessari; altrimenti usa un font disponibile sul PC. Nelle scansioni il testo è un’immagine: puoi aggiungere testo, firmare e oscurare, ma non riscrivere direttamente le parole fotografate.'],
  ['Come arriva un file sul telefono?', 'PC e telefono devono stare sulla stessa rete Wi-Fi. Scegli «Al telefono», inquadra il QR e scarica dal browser: nessuna app da installare. Il collegamento dura 10 minuti, o finché premi Ferma. La prima volta Windows può chiederti di consentire ORBIT nel firewall.'],
  ['Sovrascrive i miei file?', 'Mai. Il risultato è sempre un file nuovo: lo salvi dove vuoi, oppure attivi il salvataggio rapido accanto all’originale.'],
- ['Servono altri programmi?', 'Quasi mai. Per trasformare documenti Office in PDF serve LibreOffice. L’OCR usa le lingue già installate in Windows; HEIC, AVIF e alcuni formati video dipendono dai codec del PC.'],
+ ['Servono altri programmi?', 'L’editor PDF è dentro ORBIT. Per le conversioni tra documenti serve Microsoft Office o LibreOffice; per EPUB serve LibreOffice. L’OCR usa le lingue già installate in Windows; HEIC, AVIF e alcuni formati video dipendono dai codec del PC.'],
 ];
 ---
 <Layout><main id="main">
@@ -25,6 +28,19 @@ const faqs: [string, string][] = [
   <Hero client:load>
     <div class="hero-cta"><Download/><a class="film-link" href="#film"><span class="film-link-play" aria-hidden="true"></span>Guarda il film · 24 s</a></div>
   </Hero>
+</section>
+
+<section class="scene pdf-scene paper" id="pdf" aria-labelledby="pdf-title">
+  <div class="pdf-heading">
+    <div><p class="pdf-eyebrow">ORBIT 0.10 · Modifica PDF</p><h2 id="pdf-title">L’ultima modifica.<br/><em>Prima di inviare.</em></h2></div>
+    <p>Correggi una data. Metti la firma. Togli i dati che devono restare tuoi. Il PDF si sistema qui, sul tuo PC.</p>
+  </div>
+  <PdfDemo client:visible/>
+  <div class="pdf-capabilities">
+    <p><span>01 / CONTENUTO</span>Testo, immagini, firma.<br/>Anche trova e sostituisci.</p>
+    <p><span>02 / PAGINE</span>Riordina, ruota, elimina.<br/>O aggiungi una pagina vuota.</p>
+    <p><span>03 / CONTROLLO</span>Evidenzia, disegna, confronta.<br/>L’originale resta com’è.</p>
+  </div>
 </section>
 
 <section class="scene sweep-scene paper" id="sfondo" aria-labelledby="sweep-title">
@@ -90,7 +106,6 @@ const faqs: [string, string][] = [
 
 <section class="scene vector-scene ink" id="svg" aria-labelledby="vector-title">
   <div class="scene-copy">
-    <p class="new-tag">Nuovo nella 0.8</p>
     <h2 id="vector-title">Dai pixel<br/>ai tracciati.</h2>
     <p><b>Vettorizza</b> trasforma un’immagine in SVG: un logo sgranato torna nitido a qualsiasi dimensione. Tre stili: Logo, Bianco e nero, Foto.</p>
   </div>
@@ -133,6 +148,6 @@ const faqs: [string, string][] = [
   </div>
 </section>
 
-</main><script type="application/ld+json" set:html={JSON.stringify({'@context':'https://schema.org','@type':'SoftwareApplication',name:'ORBIT',operatingSystem:'Windows 10, Windows 11',applicationCategory:'UtilitiesApplication',softwareVersion:download.version,fileSize:`${download.bytes}`,offers:{'@type':'Offer',price:'0',priceCurrency:'EUR'},description:'Un menu radiale per Windows: seleziona un file, premi Ctrl+Alt+O e convertilo, comprimilo, togli lo sfondo, leggi il testo o mandalo al telefono. Tutto in locale.',...(download.url && download.url.startsWith('https://') ? {downloadUrl:download.url}:{}),featureList:features.map(f=>f.name)})}/>
+</main><script type="application/ld+json" set:html={JSON.stringify({'@context':'https://schema.org','@type':'SoftwareApplication',name:'ORBIT',operatingSystem:'Windows 10, Windows 11',applicationCategory:'UtilitiesApplication',softwareVersion:download.version,fileSize:`${download.bytes}`,offers:{'@type':'Offer',price:'0',priceCurrency:'EUR'},description:'Un menu radiale per Windows: modifica PDF, oscura dati sensibili, converti file, togli lo sfondo e invia al telefono. Tutto sul tuo PC.',...(download.url && download.url.startsWith('https://') ? {downloadUrl:download.url}:{}),featureList:features.map(f=>f.name)})}/>
 <script>import '../lib/motion';</script>
 </Layout>

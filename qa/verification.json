@@ -1,26 +1,30 @@
 {
-  "at": "2026-10-21T20:35:39.482Z",
-  "base": "https://orbit-beta-app.vercel.app",
+  "at": "2026-10-24T20:33:23.891Z",
+  "base": "http://127.0.0.1:4321",
   "viewports": [
     {
       "width": 1920,
-      "indexRows": 54,
+      "pdfDemo": true,
+      "indexRows": 63,
       "axe": []
     },
     {
       "width": 1366,
-      "indexRows": 54,
+      "pdfDemo": true,
+      "indexRows": 63,
       "axe": [],
-      "download": "https://github.com/gianlucadark/orbit/releases/download/v0.8.0/ORBIT_0.8.0_x64-setup.exe"
+      "download": "https://github.com/gianlucadark/orbit/releases/download/v0.10.0/ORBIT_0.10.0_x64-setup.exe"
     },
     {
       "width": 390,
-      "indexRows": 54,
+      "pdfDemo": true,
+      "indexRows": 63,
       "axe": []
     },
     {
       "width": 375,
-      "indexRows": 54,
+      "pdfDemo": true,
+      "indexRows": 63,
       "axe": []
     }
   ],

@@ -71,6 +71,7 @@ export default function Hero({ children }: { children?: ReactNode }) {
   function choose(i: number) { cancelAnimationFrame(frame.current); setRunning(null); setResult(null); close(); setFile(i); }
 
   function run(id: string) {
+    if (id === 'pdf:edit') { close(); document.getElementById('pdf')?.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' }); return; }
     const start = performance.now();
     const tick = (now: number) => {
       const p = Math.min(1, (now - start) / 950);
@@ -129,6 +130,7 @@ export default function Hero({ children }: { children?: ReactNode }) {
   return <MotionConfig reducedMotion="user">
     <div className="hero-grid">
       <div className="hero-copy">
+        <a className="hero-news" href="#pdf"><span>NUOVO</span> Il tuo PDF, con le tue modifiche. <span aria-hidden="true">↗</span></a>
         <h1 id="hero-title">
           <span className="line">Seleziona un file.</span>
           <span className="line keys-line">Premi
@@ -137,7 +139,7 @@ export default function Hero({ children }: { children?: ReactNode }) {
             </button>
           </span>
         </h1>
-        <p className="hero-lede">Sotto il cursore si apre una ruota con tutto quello che puoi fare a quel file: convertirlo, comprimerlo, togliergli lo sfondo, leggerne il testo, mandarlo al telefono. Il lavoro lo fa il tuo PC, non un sito.</p>
+        <p className="hero-lede">Modifica un PDF, oscura i dati riservati, togli lo sfondo a una foto. O converti, comprimi e manda al telefono. Tutto da una ruota, tutto sul tuo PC.</p>
         {children}
       </div>
 

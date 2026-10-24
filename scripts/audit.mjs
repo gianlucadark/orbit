@@ -2,6 +2,7 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { features, categories } from '../src/data/features.ts';
 const paths=[...new Set(['src/components/Brand.tsx','src/components/Wheel.tsx','src/lib/present.ts','src/App.css','src-tauri/tauri.conf.json','src-tauri/src/converters/registry.rs','src-tauri/src/converters/mod.rs','src-tauri/src/commands/mod.rs','src-tauri/src/jobs/worker.rs','src-tauri/src/safety.rs','src-tauri/src/models.rs',...features.map(f=>f.source.startsWith('../src/')?f.source.slice(3):'src-tauri/src/'+f.source)])];
+paths.push('src/features/editor/PdfEditor.tsx','src/features/editor/SignaturePad.tsx','src/features/editor/PageView.tsx','src/features/editor/model.ts','src-tauri/src/editor/surgery.rs','src-tauri/src/editor/content.rs','src-tauri/src/converters/msoffice.rs');
 const fingerprints={};for(const p of paths) fingerprints[p]=createHash('sha256').update(await readFile(new URL('../../'+p,import.meta.url))).digest('hex');
 if(process.argv.includes('--check')){
  const previous=JSON.parse(await readFile(new URL('../docs/source-fingerprints.json',import.meta.url)));

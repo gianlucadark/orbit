@@ -1,7 +1,8 @@
-// Audited against ORBIT 0.8.0 registry.rs, each provider and the UI. See docs/FEATURE_AUDIT.md.
+// Product catalog, including the ORBIT 0.10 PDF editor. See docs/UPDATE_0.10.md for audit scope.
 export interface Feature { id: string; name: string; category: string; description: string; formats: string; options: string; example: string; source: string; condition?: string }
 const f = (id: string, name: string, category: string, description: string, formats: string, options: string, example: string, source: string, condition?: string): Feature => ({id,name,category,description,formats,options,example,source,condition});
 export const features: Feature[] = [
+  f('pdf:edit','Modifica PDF','PDF','Correggi il testo, aggiungi immagini e firma, oscura i dati riservati. Salva una nuova copia lasciando intatto l’originale.','Un PDF → PDF modificato','Trova e sostituisci; testo, disegno, evidenziatore e gomma; firma disegnata o digitata; riordino, rotazione, eliminazione e pagine vuote. Scanner privacy per email, telefoni, IBAN, carte, codici fiscali e partite IVA.','proposta.pdf → proposta modificata.pdf','editor/mod.rs','Il font originale viene usato se contiene i caratteri necessari. Nelle scansioni puoi aggiungere testo, firmare e oscurare; ricerca e scanner privacy richiedono testo leggibile. Controlla i dati rilevati prima di salvare. I contenuti oscurati vengono rimossi al salvataggio.'),
   ...['png','jpg','webp','bmp','tiff'].map(ext => f(`image:${ext}`, `Converti in ${ext.toUpperCase()}`, 'Immagini', 'Cambia formato e ridimensiona mantenendo le proporzioni.', 'PNG, JPG, WebP, BMP, TIFF, GIF, SVG, HEIC, HEIF, AVIF', 'Larghezza / altezza. Qualità JPG e WebP; WebP 100 senza perdita. GIF e TIFF: primo frame/pagina.', `foto.png → foto.${ext}`, 'converters/images.rs', 'HEIC/HEIF/AVIF richiedono le estensioni HEIF e HEVC (o AV1) del Microsoft Store.')),
   f('image:compress','Comprimi a una dimensione','Immagini','Scegli il peso, ORBIT cerca la qualità che ci sta.','Immagini → JPEG o WebP trasparente','200 KB–10 MB o valore personalizzato; può ridurre la risoluzione.','foto.png → entro 1 MB','converters/images.rs'),
   f('image:ico','Crea icone Windows','Immagini','Un file con più dimensioni per le tue icone.','Immagini → ICO','Da 16 a 256 px, centrato su trasparenza.','logo.png → logo.ico','converters/images.rs'),
@@ -22,8 +23,18 @@ export const features: Feature[] = [
   f('ocr:pdf','PDF ricercabile','Testo e QR','Cerca e seleziona le parole dentro una scansione.','Immagini, singolo PDF → PDF','Aggiunge uno strato di testo invisibile mantenendo l’aspetto.','scansione.pdf → PDF ricercabile','ocr.rs','Richiede una lingua OCR installata in Windows.'),
   f('qr:read','Leggi QR code','Testo e QR','Recupera il contenuto di un QR da un’immagine.','Immagini → appunti','Testo dei codici riconosciuti.','QR.png → contenuto negli appunti','converters/qr.rs'),
   ...['png','svg'].map(ext => f(`qr:${ext}`,`Genera QR ${ext.toUpperCase()}`,'Testo e QR','Trasforma un testo o un collegamento in un codice.','TXT, URL → '+ext.toUpperCase(),'Payload fino a 2331 byte; correzione M.',`link.txt → QR.${ext}`,'converters/qr.rs')),
-  f('office:pdf','Documenti in PDF','Documenti','Porta documenti, fogli e presentazioni in PDF.','DOCX, DOC, ODT, RTF, TXT, XLSX, PPTX → PDF','Layout dipendente da LibreOffice.','relazione.docx → relazione.pdf','converters/office.rs','Richiede LibreOffice installato.'),
-  f('office:txt','DOCX in testo','Documenti','Recupera il testo del documento in UTF-8.','DOCX → TXT','Conversione locale via LibreOffice.','appunti.docx → appunti.txt','converters/office.rs','Richiede LibreOffice installato.'),
+  f('office:pdf','Documenti in PDF','Documenti','Porta documenti, fogli e presentazioni in PDF.','DOCX, DOC, ODT, RTF, TXT, XLSX, XLS, ODS, PPTX, PPT, ODP → PDF','Scegli la suite se ne hai più di una. La fedeltà del layout dipende dal documento e dalla suite.','relazione.docx → relazione.pdf','converters/office.rs','Richiede l’app Microsoft Office corrispondente o LibreOffice installato.'),
+  f('office:txt','Documenti in testo','Documenti','Recupera il testo del documento in UTF-8.','DOCX, DOC, ODT, RTF → TXT','Solo il testo, senza impaginazione.','appunti.docx → appunti.txt','converters/office.rs','Richiede Microsoft Word o LibreOffice installato.'),
+  ...[
+    ['docx','Word DOCX','DOC, ODT, RTF, TXT, PDF','Word ricostruisce paragrafi e tabelle dal PDF; LibreOffice usa caselle di testo. I layout complessi possono cambiare. PDF cifrati esclusi.'],
+    ['xlsx','Excel XLSX','XLS, ODS','Conversione tramite la suite installata.'],
+    ['pptx','PowerPoint PPTX','PPT, ODP','Conversione tramite la suite installata.'],
+    ['odt','OpenDocument ODT','DOCX, DOC, RTF','LibreOffice ha la precedenza quando disponibile.'],
+    ['ods','OpenDocument ODS','XLSX, XLS','LibreOffice ha la precedenza quando disponibile.'],
+    ['odp','OpenDocument ODP','PPTX, PPT','LibreOffice ha la precedenza quando disponibile.'],
+    ['rtf','Rich Text RTF','DOCX, DOC, ODT','Conservazione della formattazione dipendente dalla suite.'],
+    ['epub','eBook EPUB','DOCX, DOC, ODT','Esportazione tramite LibreOffice.'],
+  ].map(([id,name,inputs,options]) => f(`office:${id}`,`Converti in ${name}`,'Documenti','Cambia formato usando la suite già installata sul PC.',`${inputs} → ${id.toUpperCase()}`,options,`${inputs.split(',')[0].toLowerCase()} → ${id}`,'converters/office.rs',id === 'epub' ? 'Richiede LibreOffice installato.' : 'Richiede l’app Microsoft Office corrispondente o LibreOffice installato.')),
   ...[
     ['mp4','Comprimi video','Un video della dimensione giusta per condividerlo.','Video → MP4 H.264/AAC','10 / 16 / 25 / 50 / 100 / 500 MB o personalizzato.','video.mov → video compresso.mp4'],
     ['gif','Crea GIF animate','Un piccolo momento, in loop.','Video → GIF','Primi 3–15 secondi, 10 fps, 320–640 px.','video.mp4 → animazione.gif'],
@@ -57,7 +68,7 @@ export const features: Feature[] = [
 export const categories = ['Immagini','PDF','Testo e QR','Condivisione','Dati','Archivi','Audio e video','Documenti','Privacy','Windows'];
 export const demoSets = [
   { name:'Tazza.png', kind:'Immagine', ext:'PNG', image:'/assets/tazza.webp', ids:['image:png','image:jpg','image:webp','image:bmp','image:tiff','image:ico','vector:svg','pdf:images','image:compress','ocr:copy','ocr:pdf','qr:read','bg:remove','privacy:strip','share:phone','archive:create:zip','archive:create:7z','archive:create:tar','archive:create:tar.gz'] },
-  { name:'Idee.pdf',kind:'Documento',ext:'PDF',ids:['pdf:split','pdf:extract','pdf:rotate','pdf:text','pdf:png','pdf:jpg','pdf:compress','ocr:pdf','ocr:copy','privacy:strip','share:phone','archive:create:zip','archive:create:7z','archive:create:tar','archive:create:tar.gz'] },
+  { name:'Idee.pdf',kind:'Documento',ext:'PDF',ids:['pdf:edit','office:docx','pdf:split','pdf:extract','pdf:rotate','pdf:text','pdf:png','pdf:jpg','pdf:compress','ocr:pdf','ocr:copy','privacy:strip','share:phone','archive:create:zip','archive:create:7z','archive:create:tar','archive:create:tar.gz'] },
   { name:'Dati.json',kind:'Dati',ext:'JSON',ids:['data:yaml','data:toml','data:csv','data:xlsx','share:phone','archive:create:zip','archive:create:7z','archive:create:tar','archive:create:tar.gz'] },
   { name:'Due PDF',kind:'Selezione multipla',ext:'2 PDF',ids:['pdf:merge','privacy:strip','share:phone','archive:create:zip','archive:create:7z','archive:create:tar','archive:create:tar.gz'] },
 ];

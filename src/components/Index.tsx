@@ -5,9 +5,9 @@ import { matches } from '../lib/types';
 
 /** The full list of operations, typeset like the index at the back of a book. */
 export default function Index() {
-  const [category, setCategory] = useState<string | null>('Immagini');
+  const [category, setCategory] = useState<string | null>('PDF');
   const [query, setQuery] = useState('');
-  const [open, setOpen] = useState<string | null>('vector:svg');
+  const [open, setOpen] = useState<string | null>('pdf:edit');
   const visible = features.filter(f => query ? matches(query, `${f.name} ${f.formats} ${f.description} ${f.category}`) : !category || f.category === category);
   return <div className="index">
     <div className="index-tools">

@@ -1,4 +1,4 @@
-import { Archive, ArrowLeftRight, Eraser, FileOutput, FileSearch, FileText, Images, List, Merge, PackageOpen, QrCode, RotateCw, ScanQrCode, ScanText, Scissors, Shrink, SlidersHorizontal, Smartphone, Type, WandSparkles } from 'lucide-react';
+import { Archive, ArrowLeftRight, Eraser, FileOutput, FilePenLine, FileSearch, FileText, Images, List, Merge, PackageOpen, QrCode, RotateCw, ScanQrCode, ScanText, Scissors, Shrink, SlidersHorizontal, Smartphone, Type, WandSparkles } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import type { Action, FileInfo, Options } from './types';
 import { language, t } from './i18n';
@@ -25,6 +25,7 @@ export interface ActionLook { tag?: string; icon?: LucideIcon; caption: string; 
 
 /** Tools drawn with an icon: [icon, caption, title] (Italian source text, translated on use). */
 const TOOLS: Record<string, [LucideIcon, string, string]> = {
+  'pdf:edit': [FilePenLine, 'Editor', 'Modifica il PDF'],
   'pdf:images': [FileText, 'Crea PDF', 'Crea un PDF'],
   'pdf:merge': [Merge, 'Unisci', 'Unisci i PDF'],
   'pdf:split': [Scissors, 'Dividi', 'Dividi le pagine'],
@@ -57,9 +58,7 @@ export function look(action: Action): ActionLook {
   if (action.id === 'vector:svg') return { tag: 'SVG', caption: t('Vettoriale'), title: t('Vettorizza in SVG'), secondary: false };
   if (action.id === 'media:gif') return { tag: 'GIF', caption: t('Animata'), title: t('Crea una GIF animata'), secondary: false };
   if (action.id === 'media:mp3') return { tag: 'MP3', caption: t('Audio'), title: t('Converti in {format}', { format: 'MP3' }), secondary: false };
-  if (domain === 'office') return kind === 'pdf'
-    ? { tag: 'PDF', caption: t('Documento'), title: t('Converti in {format}', { format: 'PDF' }), secondary: false }
-    : { tag: 'TXT', caption: t('Testo'), title: t('Converti in testo'), secondary: false };
+  if (domain === 'office') return { tag: kind.toUpperCase(), caption: t('Documento'), title: t('Converti in {format}', { format: kind.toUpperCase() }), secondary: false };
   if (domain === 'archive') {
     if (kind === 'extract') return { icon: PackageOpen, caption: t('Estrai'), title: t('Estrai archivio'), secondary: false };
     if (kind === 'list') return { icon: List, caption: t('Indice'), title: t('Elenca il contenuto'), secondary: false };
@@ -84,6 +83,7 @@ export interface ActionGroup { id: string; caption: string; title: string; icon?
 
 /** Families in ring order; an action belongs to the first that matches (anything else: "Modifica"). */
 const FAMILIES: [string, string, string, LucideIcon, RegExp][] = [
+  ['editor', 'Editor', 'Modifica il PDF', FilePenLine, /^pdf:edit$/],
   ['convert', 'Converti', 'Converti in un altro formato', ArrowLeftRight, /^(image:(png|jpg|webp|bmp|tiff|ico)|vector:|office:|data:|media:(mp3|gif)|pdf:(images|png|jpg)|archive:repack:)/],
   ['compress', 'Comprimi', 'Comprimi', Shrink, /^(image:compress|pdf:compress|media:mp4|archive:create:)/],
   ['text', 'Testo', 'Testo e QR code', ScanText, /^(ocr:|pdf:text|qr:)/],
